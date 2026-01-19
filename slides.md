@@ -27,17 +27,11 @@ Structural search & rewrite, from “why” to “how”
 </div>
 
 <!--
-Hello everyone, I'm BoWen.
+Hi everyone, I'm BoWen.
 
-For today's share, I'm goona talk about the Ast Grep, which, we start with three parts, including what is it, how we use it, when we use it, and how we understand its inner works(from lexer and parser to AST).
+As a code-focused AI agent team, we need to query and transform code by structure. Like how the DOM API lets us traverse and manipulate the HTML DOM tree, Ast-Grep lets us query and rewrite information on the code’s Abstract Syntax Tree (AST).
 
-For the third, we won't talk much, but providing a view of the lex and parse and some compiler principles.
-
-大家好，我是博文。
-
-今天想和大家分享 Ast Grep。我们会从三个部分开始：它是什么、我们怎么用、以及在什么场景下需要用到它；最后也会简单聊一下它的内部原理（从 lexer / parser 到 AST），并补充一些编译器的基本思路。
-
-第三部分不会展开太多，主要是提供一个视角，帮助大家理解 lexer / parser 以及一些编译器原则。
+Today we'll cover practical usage, a few rules of thumb, and how to generate your own AST and match against it.
 -->
 
 ---
@@ -49,14 +43,20 @@ class: text-center
 
 <div class="max-w-3xl mx-auto text-left">
   <ol class="space-y-3 text-lg">
-    <li><b>How I use Ast-Grep</b> (what it is, Paraflow, my workflow)</li>
-    <li><b>In Which We Needs it</b> (where text tools break)</li>
-    <li><b>How Lexer/Parser empower it</b> (text → tree → rewrite)</li>
+    <li><b>How we use Ast-Grep</b> (what it is, in Paraflow, our workflow)</li>
+    <li><b>Where we need it</b> (where text tools break)</li>
+    <li><b>How lexer/parser powers it</b> (text → tree → rewrite)</li>
   </ol>
 </div>
 
 <!--
-Tip: Presenter Mode shows these notes.
+Ast-Grep has been useful for us in Paraflow—and previously in Motiff AI.
+
+Today I'll share Ast-Grep in three parts: what it is, how we use it, and where we need it.
+
+Then we'll briefly look under the hood—from lexer/parser to AST—to understand why the matching works.
+
+Given the limited time—and to be honest, I don’t have all the formal regex / automata theory at my fingertips—we’ll keep this part to a small subset: just a high-level mental model, up to the DFA abstraction.
 -->
 
 ---
