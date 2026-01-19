@@ -18,6 +18,8 @@ jobs:
         run: bun install
       - name: Build
         run: bun run build
+      - name: Remove Netlify redirects for Workers
+        run: bun run cf:prepare
       - name: Deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

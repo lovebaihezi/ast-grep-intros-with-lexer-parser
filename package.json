@@ -6,7 +6,8 @@
         "build": "slidev build",
         "dev": "slidev --remote",
         "export": "slidev export",
-        "cf:validate": "wrangler deploy --dry-run --config wrangler.jsonc"
+        "cf:prepare": "bun -e \"import { rmSync } from 'node:fs'; rmSync('dist/_redirects', { force: true });\"",
+        "cf:validate": "bun run build && bun run cf:prepare && wrangler deploy --dry-run --config wrangler.jsonc"
     },
     "dependencies": {
         "@slidev/cli": "^52.11.3",
