@@ -17,30 +17,18 @@ Think of it as three verbs:
 -->
 
 ---
-layout: two-cols
+layout: default
 class: text-left
 ---
 
 # Motiff AI: Query + Transform
 
+<div class="grid grid-cols-2 gap-x-10 gap-y-6 mt-6 items-start">
 <div v-click="1">
 Match imports to verify required packages are present.
 </div>
 
-<div v-click="2" class="mt-3">
-Transform `export default function App` → `function App` (when the default export is a function).
-</div>
-
-<div v-click="3" class="mt-3">
-Remove `export default App` (when it’s a symbol), then append `root.render(&lt;App /&gt;)` so the snippet renders as expected.
-</div>
-
-::right::
-
-<div class="h-full flex items-center justify-center">
-<div class="w-full max-w-md">
-
-<div v-click="1" class="text-left">
+<div v-click="1" class="text-left text-sm">
 
 ```ts
 import { createRoot } from 'react-dom/client'
@@ -48,25 +36,40 @@ import { createRoot } from 'react-dom/client'
 
 </div>
 
-<div v-click="2" class="text-left">
+<div v-click="2">
+Transform <code>export default function App</code> → <code>function App</code> (when the default export is a function).
+</div>
 
-```ts {1}
-export default function App() { /* ... */ }
+<div v-click="2" class="text-left text-sm">
 
-export default App;
+```ts
+export default function App() {
+  /* ... */
+}
+
+// ↓
+function App() {
+  /* ... */
+}
 ```
 
 </div>
 
-<div v-click="3" class="text-left">
-
-```ts {3}
-export default function App() { /* ... */ }
-
-export default App;
-```
-
+<div v-click="3">
+Remove <code>export default App</code> (when it’s a symbol), then append <code>root.render(&lt;App /&gt;)</code> so the snippet renders as expected.
 </div>
+
+<div v-click="3" class="text-left text-sm">
+
+```ts
+function App() { /* ... */ }
+
+export default App
+
+// ↓
+const root = createRoot(document.getElementById('root')!)
+root.render(<App />)
+```
 
 </div>
 </div>
@@ -84,6 +87,7 @@ Motiff AI: Query + Transform
 ---
 layout: two-cols-header
 class: text-left
+layoutClass: paraflow-usage
 ---
 
 # Paraflow: Query directives in comments
@@ -195,6 +199,14 @@ ast-grep --pattern '$COMMENT' --lang javascript
 </div>
 
 <style>
+.paraflow-usage .col-left pre {
+  margin-top: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+.paraflow-usage .col-left p {
+  margin-top: 0.6rem;
+  margin-bottom: 0.6rem;
+}
 .wrap-code pre {
   white-space: pre-wrap !important;
   word-break: break-word;
@@ -215,4 +227,76 @@ That means we need to support both `// ...` and `{/* ... */}`. With regex, this 
 [click] With Ast-Grep, we can match comments structurally (it doesn’t matter whether they’re `//` or `{/* */}`).
 
 [click] The result is structured data (range/text), which is much easier to post-process than regex captures.
+-->
+
+---
+layout: default
+class: text-left
+---
+
+# Paraflow: Advanced patterns (sketch)
+
+<div class="grid grid-cols-2 gap-x-10 gap-y-6 mt-6 items-start text-sm">
+<div v-click="1">
+AST match + text constraint: migrate only `track("pf_*")` calls.
+</div>
+
+<div v-click="1" class="text-left">
+
+```yaml
+rule:
+  pattern: track($NAME, $DATA)
+  constraints:
+    NAME:
+      regex: '^"pf_'
+fix: telemetry.track($NAME, $DATA)
+```
+
+</div>
+
+<div v-click="2">
+Named function + specific args: rewrite API shapes safely.
+</div>
+
+<div v-click="2" class="text-left">
+
+```yaml
+rule:
+  pattern: generateImage($PROMPT, { ratio: $RATIO })
+fix: generateImage({ prompt: $PROMPT, ratio: $RATIO })
+```
+
+</div>
+
+<div v-click="3">
+Context match: enforce rules only in certain scopes (e.g. inside React effects).
+</div>
+
+<div v-click="3" class="text-left">
+
+```yaml
+rule:
+  inside:
+    pattern: useEffect(() => { $BODY }, $DEPS)
+  pattern: fetch($URL)
+fix: request($URL)
+```
+
+</div>
+</div>
+
+<div v-click="4" class="mt-6 text-lg font-semibold">
+And ask AI to generate patterns.
+</div>
+
+<!--
+These are “recipe” patterns we can grow into real project rules:
+
+[click] Combine structural match with a regex constraint so we only touch the calls we mean to touch.
+
+[click] Match a specific function name + argument shape, then rewrite to a new API signature.
+
+[click] Use `inside:` to limit enforcement/migrations to a precise scope.
+
+[click] And ask AI to generate patterns, then we review + tighten constraints.
 -->

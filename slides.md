@@ -26,7 +26,7 @@ Structural search & rewrite, from “why” to “how”
 </div>
 
 <div class="mt-8 opacity-80">
-  Paraflow · AST · Lexer/Parser
+  Paraflow · Ast-Grep · DFA (Lexer/Parser)
 </div>
 
 <!--
@@ -34,7 +34,9 @@ Hi everyone, I'm BoWen.
 
 As a code-focused AI agent team, we need to query and transform code by structure. Like how the DOM API lets us traverse and manipulate the HTML DOM tree, Ast-Grep lets us query and rewrite information on the code’s Abstract Syntax Tree (AST).
 
-Today we'll cover practical usage, a few rules of thumb, and how to generate your own AST and match against it.
+Today we'll cover practical usage, a few rules of thumb, and a DFA mental model behind lexer/parser.
+
+We won’t go deep into building the AST itself today (time is limited) — just enough to understand why structural matching works.
 -->
 
 ---
@@ -46,18 +48,20 @@ class: text-center
 
 <div class="max-w-3xl mx-auto text-left">
   <ol class="space-y-3 text-lg">
-    <li><b>How we use Ast-Grep</b> (what it is, in Paraflow, our workflow)</li>
-    <li><b>Where we need it</b> (where text tools break)</li>
-    <li><b>How lexer/parser powers it</b> (text → tree → rewrite)</li>
+    <li><b>Part 1</b> — How we use Ast-Grep</li>
+    <li><b>Part 2</b> — Where we need it</li>
+    <li><b>Part 3</b> — DFA helps build the Lexer + Parser</li>
   </ol>
 </div>
 
 <!--
-Ast-Grep has been useful for us in Paraflow—and previously in Motiff AI.
+Today I'll share the Ast Grep, which, like editing the HTML using bs4, we edit the code using Ast-Grep.
 
-Today I'll share Ast-Grep in three parts: what it is, how we use it, and where we need it.
+Consider in the past, we needs bs4 in python for query or fix problems from HTML, like check and update image by search through in the trees.
 
-Then we'll briefly look under the hood—from lexer/parser to AST—to understand why the matching works.
+So, for the Paraflow we needs to work on the TypeScript with React, we will needs tools to work with synctax tree, and, ast-grep can help us.
+
+We'll talks about in three parts: How we use it, how to use it, and the key of impl one of it.
 
 Given the limited time—and to be honest, I don’t have all the formal regex / automata theory at my fingertips—we’ll keep this part to a small subset: just a high-level mental model, up to the DFA abstraction.
 -->
