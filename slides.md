@@ -11,6 +11,9 @@ drawings:
 transition: slide-left
 mdc: true
 duration: 25min
+addons:
+  - slidev-addon-typst
+  - fancy-arrow
 ---
 
 # Ast-Grep in Practice
@@ -74,13 +77,37 @@ src: ./pages/03-lexer-parser-empower-ast-grep.md
 ---
 layout: center
 class: text-center
+---
+
+## Not talked
+
+<div class="max-w-3xl mx-auto text-left">
+  <ol class="space-y-3 text-lg">
+    <li>Different types of lexer/parser (LL(k), LL(0)/LL(1))</li>
+    <li>The DFA we used is one example (not general, nothing special)</li>
+    <li>We haven't talked about grammar/syntax here (it's complex). In Q&A, we can only take one question.</li>
+    <li>etc.</li>
+  </ol>
+</div>
+
+<!--
+Optional clarifications:
+
+- "LL(k)" means k-token lookahead. There are also LR families, etc.
+- The DFA shown is just a teaching example to build the mental model (not a complete theory of lexing/parsing).
+-->
+
+---
+layout: center
+class: text-center
 background: https://source.unsplash.com/1600x900/?question,abstract
 ---
 
 # Q&A
 
-What would you automate next?
+<!--
+Prompt ideas:
 
-<div class="mt-10 opacity-80 text-sm">
-  (rules · migrations · CI · new languages)
-</div>
+- What would you automate next?
+- rules · migrations · CI · new languages
+-->
